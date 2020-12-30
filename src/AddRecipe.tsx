@@ -3,7 +3,7 @@ import { Form, Input, Button, Layout, Typography, Upload, Modal, Select } from '
 import { PlusOutlined } from '@ant-design/icons';
 import { withFormik, FormikErrors, FormikProps } from 'formik';
 
-import { fetchData, MethodType } from './useFetch';
+import { BASE_URL } from './constants/config';
 
 const { Option } = Select;
 
@@ -131,7 +131,7 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
       formData.append('ingredients', JSON.stringify(ingredients));
     }
 
-    fetch('http://localhost:3000/recipes', {
+    fetch(`${BASE_URL}/recipes`, {
       method: 'POST',
       body: formData
     })

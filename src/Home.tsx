@@ -6,6 +6,7 @@ import { fetchData } from './useFetch';
 import { useFetch, MethodType } from './useFetch';
 import { Recipes } from './Recipes';
 import { Ingredient, RecipeType } from './Recipes';
+import { BASE_URL } from './constants/config';
 
 const { Content, Sider } = Layout;
 const { Search } = Input;
@@ -37,11 +38,13 @@ const addCheckboxValues = (ingredients: Ingredient[]) => {
 };
 
 export const Home: FunctionComponent = () => {
-  const { status, data } = useFetch('http://localhost:3000/recipes', MethodType.GET, null);
+  const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
   const [date, setDate] = useState(moment());
   const [recipeToDateModalVisibility, setRecipeToDateModalVisibility] = useState(false);
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
   const [chosenRecipeId, setRecipeId] = useState<string | null>(null);
+
+  console.log('==== test =====', BASE_URL);
 
   const handleSetRecipeToDate = (ingredients: Ingredient[], id: string) => {
     setIngredients(addCheckboxValues(ingredients));
@@ -82,7 +85,7 @@ export const Home: FunctionComponent = () => {
           [time]: filteredIngredients
         }
       };
-      fetchData(`http://localhost:3000/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then(() => {
+      fetchData(`${BASE_URL}/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then(() => {
         setRecipeToDateModalVisibility(false);
       });
     }
