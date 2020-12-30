@@ -24,9 +24,9 @@ function App() {
             <img alt='logo' src={'http://bluewolf.pl/wp-content/themes/bluewolf/fonts/logo.svg'} width='50px' height='50px' />
           </div>
           <Menu theme={'dark'} mode={'horizontal'}>
-            <Menu.Item key={1}><Link to={'/'}><LaptopOutlined />Home</Link></Menu.Item>
-            <Menu.Item key={2}><Link to={'/add-recipe'}><FileAddOutlined />Add recipe</Link></Menu.Item>
-            <Menu.Item key={3}><Link to={'/shopping-list'}><ShoppingCartOutlined />Daily shopping list</Link></Menu.Item>
+            {/*<Menu.Item key={1}><Link to={'/'}><LaptopOutlined />Home</Link></Menu.Item>*/}
+            {/*<Menu.Item key={2}><Link to={'/add-recipe'}><FileAddOutlined />Add recipe</Link></Menu.Item>*/}
+            {/*<Menu.Item key={3}><Link to={'/shopping-list'}><ShoppingCartOutlined />Daily shopping list</Link></Menu.Item>*/}
           </Menu>
         </Header>
       </Layout>
