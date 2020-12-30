@@ -4,13 +4,13 @@ import moment from "moment";
 
 import { MethodType, useFetch } from './useFetch';
 import { RecipeType } from './Recipes';
-
+import { BASE_URL } from './constants/config';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 export const ShoppingList: FunctionComponent = () => {
-  const { status, data } = useFetch('http://localhost:3000/recipes', MethodType.GET, null);
+  const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
   const time = moment().format('L');
   const [date, setDate] = useState(time);
   const recipesStatus = status === 'fetching' ? <Spin /> : null;
