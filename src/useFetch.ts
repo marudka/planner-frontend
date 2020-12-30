@@ -20,7 +20,7 @@ export const fetchData = async (url: string, method: MethodTypeValues, body: any
     requestOptions.body = JSON.stringify(body);
   }
 
-   console.log(requestOptions);
+  console.log(requestOptions);
   return await fetch(url, requestOptions).then(response => response.json());
 };
 

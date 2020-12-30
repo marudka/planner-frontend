@@ -38,11 +38,14 @@ const addCheckboxValues = (ingredients: Ingredient[]) => {
 };
 
 export const Home: FunctionComponent = () => {
-  const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
+  // const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
   const [date, setDate] = useState(moment());
   const [recipeToDateModalVisibility, setRecipeToDateModalVisibility] = useState(false);
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
   const [chosenRecipeId, setRecipeId] = useState<string | null>(null);
+
+  const data = [] as [];
+  const status = 'fetching';
 
   const handleSetRecipeToDate = (ingredients: Ingredient[], id: string) => {
     setIngredients(addCheckboxValues(ingredients));
@@ -102,7 +105,7 @@ export const Home: FunctionComponent = () => {
   const dataCellRender = (value: any) => {
     const listData = getListData(value);
     return (
-      <ul className="recipes">
+      <ul className='recipes'>
         {listData.map((item) => {
           return (
             <li>{item.name}</li>
