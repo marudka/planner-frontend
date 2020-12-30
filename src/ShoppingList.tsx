@@ -27,7 +27,6 @@ export const ShoppingList: FunctionComponent = () => {
   });
 
   // @ts-ignore
-  console.log(recipes);
   return (
     <Layout>
       <Content style={{ padding: '50px' }}>
