@@ -10,8 +10,8 @@ import { Menu, Layout } from 'antd';
 import './App.css';
 
 import { Home } from './Home';
-import { AddRecipeConnector } from './AddRecipeConnector';
-import { ShoppingList } from './ShoppingList';
+// import { AddRecipeConnector } from './AddRecipeConnector';
+// import { ShoppingList } from './ShoppingList';
 
 const { Header } = Layout;
 
@@ -31,12 +31,12 @@ function App() {
         </Header>
       </Layout>
       <Switch>
-        <Route path={'/add-recipe'}>
-          <AddRecipeConnector />
-        </Route>
-        <Route path={'/shopping-list'}>
-          <ShoppingList />
-        </Route>
+        {/*<Route path={'/add-recipe'}>*/}
+        {/*  <AddRecipeConnector />*/}
+        {/*</Route>*/}
+        {/*<Route path={'/shopping-list'}>*/}
+        {/*  <ShoppingList />*/}
+        {/*</Route>*/}
         <Route path={'/'}>
           <Home />
         </Route>
