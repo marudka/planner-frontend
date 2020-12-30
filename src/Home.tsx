@@ -44,8 +44,6 @@ export const Home: FunctionComponent = () => {
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
   const [chosenRecipeId, setRecipeId] = useState<string | null>(null);
 
-  console.log('==== test =====', BASE_URL);
-
   const handleSetRecipeToDate = (ingredients: Ingredient[], id: string) => {
     setIngredients(addCheckboxValues(ingredients));
     setRecipeToDateModalVisibility(true);
