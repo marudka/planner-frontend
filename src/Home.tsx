@@ -7,6 +7,7 @@ import { useFetch, MethodType } from './useFetch';
 import { Recipes } from './Recipes';
 import { Ingredient, RecipeType } from './Recipes';
 import { BASE_URL } from './constants/config';
+import { useRecipesContext } from './useRecipesContext';
 
 const { Content, Sider } = Layout;
 const { Search } = Input;
@@ -38,7 +39,7 @@ const addCheckboxValues = (ingredients: Ingredient[]) => {
 };
 
 export const Home: FunctionComponent = () => {
-  const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
+  const { recipes } = useRecipesContext();
   const [date, setDate] = useState(moment());
   const [recipeToDateModalVisibility, setRecipeToDateModalVisibility] = useState(false);
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
@@ -54,8 +55,8 @@ export const Home: FunctionComponent = () => {
     setRecipeToDateModalVisibility(false);
   };
 
-  const recipesStatus = status === 'fetching' ? <Spin /> : null;
-  const recipes = data && data.length ? <Recipes recipes={data} date={date} setRecipeToDate={handleSetRecipeToDate} /> : null;
+  const recipesStatus = !recipes.length ? <Spin /> : null;
+  const recipesList = recipes.length ? <Recipes date={date} setRecipeToDate={handleSetRecipeToDate} /> : null;
 
   const handleChange = (value: any) => {
     setDate(value);
@@ -91,7 +92,7 @@ export const Home: FunctionComponent = () => {
 
   const getListData = (value: Moment): RecipeType[] => {
     const key = moment(value).format('L');
-    return data.filter((item: RecipeType) => {
+    return recipes.filter((item: RecipeType) => {
       if (!item.days) {
         return false;
       }
@@ -118,7 +119,7 @@ export const Home: FunctionComponent = () => {
         <Title level={4} style={{ marginTop: '10px' }}>List of recipes</Title>
         <Search enterButton />
         {recipesStatus}
-        {recipes}
+        {recipesList}
       </Sider>
       <Layout>
         <Content style={{ padding: '20px' }}>

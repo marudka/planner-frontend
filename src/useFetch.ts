@@ -9,7 +9,7 @@ export const MethodType: { [key in MethodTypeValues]: MethodTypeValues } = {
   GET: 'GET'
 };
 
-export const fetchData = async (url: string, method: MethodTypeValues, body: any) => {
+export const fetchData = async (url: string, method: MethodTypeValues, body?: any) => {
   const requestOptions = {
     method: method,
     headers: { 'Content-Type': 'application/json' },
@@ -20,7 +20,6 @@ export const fetchData = async (url: string, method: MethodTypeValues, body: any
     requestOptions.body = JSON.stringify(body);
   }
 
-  console.log(requestOptions);
   return await fetch(url, requestOptions).then(response => response.json());
 };
 

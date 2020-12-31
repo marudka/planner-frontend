@@ -4,6 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { withFormik, FormikErrors, FormikProps } from 'formik';
 
 import { BASE_URL } from './constants/config';
+import { useRecipesContext } from './useRecipesContext';
 
 const { Option } = Select;
 
@@ -56,7 +57,7 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
     previewTitle: '',
     fileList: [],
   });
-  const [experyment, setExperyemnt] = useState(null);
+  const { recipes, setRecipes } = useRecipesContext();
 
   // @ts-ignore
   const handleIngredientNameChange = (e) => {
@@ -116,7 +117,6 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
       ...images,
       fileList: fileList
     });
-    console.log('filelist', fileList);
   };
 
   const onFinish = () => {
@@ -137,7 +137,9 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        let updatedRecipes = [...recipes];
+        updatedRecipes.push(data);
+        setRecipes(updatedRecipes);
       })
       .catch(error => console.log(error));
 
@@ -155,11 +157,6 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
-  // @ts-ignore
-  const testInput = (event) => {
-    console.log(event.target.files);
-  };
 
   const { previewVisible, previewImage, fileList, previewTitle } = images;
 

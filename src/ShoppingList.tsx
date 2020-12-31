@@ -2,24 +2,23 @@ import React, { FunctionComponent, useState } from 'react';
 import { Layout, Spin, Typography, DatePicker } from 'antd';
 import moment from "moment";
 
-import { MethodType, useFetch } from './useFetch';
 import { RecipeType } from './Recipes';
-import { BASE_URL } from './constants/config';
+import { useRecipesContext } from './useRecipesContext';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 export const ShoppingList: FunctionComponent = () => {
-  const { status, data } = useFetch(`${BASE_URL}/recipes`, MethodType.GET, null);
+  const { recipes } = useRecipesContext();
   const time = moment().format('L');
   const [date, setDate] = useState(time);
-  const recipesStatus = status === 'fetching' ? <Spin /> : null;
+  const recipesStatus = !recipes.length ? <Spin /> : null;
 
   const handleChange = (date: any, dateString: any) => {
     setDate(moment(date).format('L'));
   };
 
-  const recipes = data.filter((item: RecipeType) => {
+  const recipesList = recipes.filter((item: RecipeType) => {
     if (!item.days) {
       return false;
     }
@@ -36,7 +35,7 @@ export const ShoppingList: FunctionComponent = () => {
         <DatePicker onChange={handleChange} />
         {recipesStatus}
         {
-          recipes && recipes.length && recipes.map((item) => {
+          recipesList.map((item) => {
             // @ts-ignore
             return item.ingredients.map((item) => {
               return <div>{item.name}, {item.count} {item.unit}</div>

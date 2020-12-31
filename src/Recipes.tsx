@@ -3,6 +3,7 @@ import { Moment } from 'moment';
 
 import { Recipe } from './Recipe';
 import { DaysType } from './Home';
+import { useRecipesContext } from './useRecipesContext';
 
 export interface Ingredient {
   name: string;
@@ -18,13 +19,13 @@ export interface RecipeType {
   days: DaysType
 }
 
-interface RecipesProps {
-  recipes: RecipeType[];
+export interface RecipesProps {
   date: Moment;
   setRecipeToDate: (ingredients: Ingredient[], id: string) => void;
 }
 
-export const Recipes: FunctionComponent<RecipesProps> = ({ recipes, date, setRecipeToDate }) => {
+export const Recipes: FunctionComponent<RecipesProps> = ({ date, setRecipeToDate }) => {
+  const { recipes } = useRecipesContext();
   return (
     <div>
       {recipes.map((item, key) => {
