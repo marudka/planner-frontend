@@ -14,7 +14,7 @@ export const ShoppingList: FunctionComponent = () => {
   const [date, setDate] = useState(time);
   const recipesStatus = !recipes.length ? <Spin /> : null;
 
-  const handleChange = (date: any, dateString: any) => {
+  const handleChange = (date: any) => {
     setDate(moment(date).format('L'));
   };
 
@@ -32,7 +32,8 @@ export const ShoppingList: FunctionComponent = () => {
         <Title level={2}>
           Shopping list
         </Title>
-        <DatePicker onChange={handleChange} />
+        <Title level={5}>Select date to chose ingredients list to buy</Title>
+        <DatePicker onChange={handleChange} defaultValue={moment()} style={{ marginBottom: '20px' }} />
         {recipesStatus}
         {
           recipesList.map((item) => {
