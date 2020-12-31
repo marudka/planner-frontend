@@ -39,7 +39,7 @@ const addCheckboxValues = (ingredients: Ingredient[]) => {
 };
 
 export const Home: FunctionComponent = () => {
-  const { recipes } = useRecipesContext();
+  const { recipes, setRecipes } = useRecipesContext();
   const [date, setDate] = useState(moment());
   const [recipeToDateModalVisibility, setRecipeToDateModalVisibility] = useState(false);
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
@@ -84,8 +84,19 @@ export const Home: FunctionComponent = () => {
           [time]: filteredIngredients
         }
       };
-      fetchData(`${BASE_URL}/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then(() => {
+      fetchData(`${BASE_URL}/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then((result) => {
         setRecipeToDateModalVisibility(false);
+        const updatedRecipes = recipes.map((item) => {
+          if (chosenRecipeId === item._id) {
+            return  {
+              ...item,
+              ...body
+            }
+          }
+          return item;
+        });
+
+        setRecipes(updatedRecipes);
       });
     }
   };
