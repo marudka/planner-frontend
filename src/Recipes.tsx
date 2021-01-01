@@ -17,19 +17,21 @@ export interface RecipeType {
   image: string;
   ingredients: Ingredient[];
   days: DaysType
+  description?: string;
 }
 
 export interface RecipesProps {
   date: Moment;
   setRecipeToDate: (ingredients: Ingredient[], id: string) => void;
+  showDrawer: (id: string) => void;
 }
 
-export const Recipes: FunctionComponent<RecipesProps> = ({ date, setRecipeToDate }) => {
+export const Recipes: FunctionComponent<RecipesProps> = ({ date, setRecipeToDate, showDrawer }) => {
   const { recipes } = useRecipesContext();
   return (
     <div>
       {recipes.map((item, key) => {
-        return <Recipe key={key} recipe={item} date={date} setRecipeToDate={setRecipeToDate} />
+        return <Recipe key={key} recipe={item} date={date} setRecipeToDate={setRecipeToDate} showDrawer={showDrawer}/>
       })}
     </div>
   )

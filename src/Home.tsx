@@ -1,13 +1,14 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Calendar, Layout, Spin, Input, Typography, Modal, Button, Checkbox } from 'antd';
+import { Calendar, Layout, Spin, Input, Typography, Modal, Button, Checkbox, Drawer, Empty } from 'antd';
 import moment, { Moment } from 'moment';
 import { fetchData } from './useFetch';
 
-import { useFetch, MethodType } from './useFetch';
+import { MethodType } from './useFetch';
 import { Recipes } from './Recipes';
 import { Ingredient, RecipeType } from './Recipes';
 import { BASE_URL } from './constants/config';
 import { useRecipesContext } from './useRecipesContext';
+import { DrawerShowContent } from './DrawerShowContent';
 
 const { Content, Sider } = Layout;
 const { Search } = Input;
@@ -44,6 +45,17 @@ export const Home: FunctionComponent = () => {
   const [recipeToDateModalVisibility, setRecipeToDateModalVisibility] = useState(false);
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
   const [chosenRecipeId, setRecipeId] = useState<string | null>(null);
+  const [isVisibleDrawer, setVisibleDrawer] = useState(false);
+  const [chosenRecipeToShow, setRecipeToShow] = useState<string | null>(null);
+
+  const handleShowDrawer = (id: string) => {
+    setRecipeToShow(id);
+    setVisibleDrawer(true);
+  };
+
+  const onCloseDrawer = () => {
+    setVisibleDrawer(false);
+  };
 
   const handleSetRecipeToDate = (ingredients: Ingredient[], id: string) => {
     setIngredients(addCheckboxValues(ingredients));
@@ -56,7 +68,7 @@ export const Home: FunctionComponent = () => {
   };
 
   const recipesStatus = !recipes.length ? <Spin /> : null;
-  const recipesList = recipes.length ? <Recipes date={date} setRecipeToDate={handleSetRecipeToDate} /> : null;
+  const recipesList = recipes.length ? <Recipes date={date} setRecipeToDate={handleSetRecipeToDate} showDrawer={handleShowDrawer} /> : null;
 
   const handleChange = (value: any) => {
     setDate(value);
@@ -163,6 +175,16 @@ export const Home: FunctionComponent = () => {
           Accept list and add to selected day
         </Button>
       </Modal>
+      <Drawer
+        title='Basic Drawer'
+        placement='right'
+        closable={false}
+        onClose={onCloseDrawer}
+        visible={isVisibleDrawer}
+        width={400}
+      >
+        {chosenRecipeToShow && <DrawerShowContent id={chosenRecipeToShow} />}
+      </Drawer>
     </Layout>
   )
 };

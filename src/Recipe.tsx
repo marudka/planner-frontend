@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Card } from 'antd';
-import { ExportOutlined, EditOutlined } from '@ant-design/icons';
+import { Card, Badge, Tooltip } from 'antd';
+import { ExportOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Moment } from 'moment';
 
 import { RecipeType, Ingredient } from './Recipes';
@@ -9,33 +9,41 @@ interface RecipesProps {
   recipe: RecipeType;
   date: Moment;
   setRecipeToDate: (ingredients: Ingredient[], id: string) => void;
+  showDrawer: (id: string) => void;
 }
 
 const { Meta } = Card;
 
-export const Recipe: FunctionComponent<RecipesProps> = ({ recipe, date, setRecipeToDate }) => {
+export const Recipe: FunctionComponent<RecipesProps> = ({ recipe, date, setRecipeToDate, showDrawer }) => {
   const onClick = () => {
     setRecipeToDate(recipe.ingredients, recipe._id);
   };
 
+  const onClickEye = () => {
+    showDrawer(recipe._id);
+  };
+
   return (
-    <Card
-      actions={[
-        <ExportOutlined key='export' onClick={onClick} />,
-        <EditOutlined key="edit" />,
-      ]}
-      hoverable
-      style={{ marginTop: '10px' }}
-      cover={
-        <img
-          alt='example'
-          src={recipe.image}
-          height={80}
-          style={{ objectFit: 'cover' }}
-        />
-      }
-    >
-      <Meta title={recipe.name} />
-    </Card>
+    <Badge.Ribbon text='Vegetarian'>
+      <Card
+        actions={[
+          <Tooltip title='Assigne to day' color='blue'><ExportOutlined key='export' onClick={onClick} /></Tooltip>,
+          <Tooltip title='Show recipe details' color='blue'><EyeOutlined key='show' onClick={onClickEye} /></Tooltip>,
+          <Tooltip title='Edit recipe' color='blue'><EditOutlined key="edit" /></Tooltip>,
+        ]}
+        hoverable
+        style={{ marginTop: '10px' }}
+        cover={
+          <img
+            alt='example'
+            src={recipe.image}
+            height={80}
+            style={{ objectFit: 'cover' }}
+          />
+        }
+      >
+        <Meta title={recipe.name} />
+      </Card>
+    </Badge.Ribbon>
   )
 };
