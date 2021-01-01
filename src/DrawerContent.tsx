@@ -4,11 +4,11 @@ import { useRecipesContext } from './useRecipesContext';
 
 const { Title } = Typography;
 
-interface DrawerShowContentProps {
+interface DrawerContentProps {
   id: string
 }
 
-export const DrawerShowContent: FunctionComponent<DrawerShowContentProps> = ({ id }) => {
+export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id }) => {
   const { recipes } = useRecipesContext();
   const chosenRecipe = recipes.find((item) => item._id === id);
 

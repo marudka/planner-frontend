@@ -8,7 +8,7 @@ import { Recipes } from './Recipes';
 import { Ingredient, RecipeType } from './Recipes';
 import { BASE_URL } from './constants/config';
 import { useRecipesContext } from './useRecipesContext';
-import { DrawerShowContent } from './DrawerShowContent';
+import { DrawerContent } from './DrawerContent';
 
 const { Content, Sider } = Layout;
 const { Search } = Input;
@@ -176,14 +176,14 @@ export const Home: FunctionComponent = () => {
         </Button>
       </Modal>
       <Drawer
-        title='Basic Drawer'
+        title='Recipe details'
         placement='right'
         closable={false}
         onClose={onCloseDrawer}
         visible={isVisibleDrawer}
         width={400}
       >
-        {chosenRecipeToShow && <DrawerShowContent id={chosenRecipeToShow} />}
+        {chosenRecipeToShow && <DrawerContent id={chosenRecipeToShow} />}
       </Drawer>
     </Layout>
   )
