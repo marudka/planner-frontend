@@ -9,7 +9,7 @@ interface RecipesProps {
   recipe: RecipeType;
   date: Moment;
   setRecipeToDate: (ingredients: Ingredient[], id: string) => void;
-  showDrawer: (id: string) => void;
+  showDrawer: (id: string, isEdit: boolean) => void;
 }
 
 const { Meta } = Card;
@@ -20,7 +20,11 @@ export const Recipe: FunctionComponent<RecipesProps> = ({ recipe, date, setRecip
   };
 
   const onClickEye = () => {
-    showDrawer(recipe._id);
+    showDrawer(recipe._id, false);
+  };
+
+  const onClickEdit = () => {
+    showDrawer(recipe._id, true);
   };
 
   return (
@@ -29,7 +33,7 @@ export const Recipe: FunctionComponent<RecipesProps> = ({ recipe, date, setRecip
         actions={[
           <Tooltip title='Assigne to day' color='blue'><ExportOutlined key='export' onClick={onClick} /></Tooltip>,
           <Tooltip title='Show recipe details' color='blue'><EyeOutlined key='show' onClick={onClickEye} /></Tooltip>,
-          <Tooltip title='Edit recipe' color='blue'><EditOutlined key="edit" /></Tooltip>,
+          <Tooltip title='Edit recipe' color='blue'><EditOutlined key="edit" onClick={onClickEdit} /></Tooltip>,
         ]}
         hoverable
         style={{ marginTop: '10px' }}

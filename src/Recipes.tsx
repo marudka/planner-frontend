@@ -23,7 +23,7 @@ export interface RecipeType {
 export interface RecipesProps {
   date: Moment;
   setRecipeToDate: (ingredients: Ingredient[], id: string) => void;
-  showDrawer: (id: string) => void;
+  showDrawer: (id: string, isEdit: boolean) => void;
 }
 
 export const Recipes: FunctionComponent<RecipesProps> = ({ date, setRecipeToDate, showDrawer }) => {

@@ -46,10 +46,12 @@ export const Home: FunctionComponent = () => {
   const [ingredients, setIngredients] = useState<CheckboxType[]>([]);
   const [chosenRecipeId, setRecipeId] = useState<string | null>(null);
   const [isVisibleDrawer, setVisibleDrawer] = useState(false);
+  const [isEditMode, setEditMode] = useState(false);
   const [chosenRecipeToShow, setRecipeToShow] = useState<string | null>(null);
 
-  const handleShowDrawer = (id: string) => {
+  const handleShowDrawer = (id: string, isEdit: boolean) => {
     setRecipeToShow(id);
+    setEditMode(isEdit);
     setVisibleDrawer(true);
   };
 
@@ -183,7 +185,7 @@ export const Home: FunctionComponent = () => {
         visible={isVisibleDrawer}
         width={400}
       >
-        {chosenRecipeToShow && <DrawerContent id={chosenRecipeToShow} />}
+        {chosenRecipeToShow && <DrawerContent id={chosenRecipeToShow} isEditMode={isEditMode} />}
       </Drawer>
     </Layout>
   )
