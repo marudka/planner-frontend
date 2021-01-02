@@ -1,7 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import { Typography, Descriptions, Image, Input, Form, Select, Button, Tag } from 'antd';
+import React, { FunctionComponent, useState } from 'react';
+import { Typography, Descriptions, Image, Input, Form, Select, Button, Tag, Empty } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useRecipesContext } from './useRecipesContext';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {fetchData, MethodType} from './useFetch';
+import {BASE_URL} from "./constants/config";
 
 const { Title } = Typography;
 const { Option} = Select;
@@ -17,11 +20,11 @@ const layout = {
 };
 
 export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEditMode }) => {
-  const { recipes } = useRecipesContext();
+  const { recipes, setRecipes } = useRecipesContext();
   const chosenRecipe = recipes.find((item) => item._id === id);
 
   if (!chosenRecipe) {
-    return null;
+    return <Empty />;
   }
 
   const list = chosenRecipe.ingredients.map((item, key) => <li key={key}>{item.name} {item.count}, {item.unit}</li>);
@@ -50,6 +53,15 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
 
   };
 
+  const handleDeleteRecipe = () => {
+    fetchData(`${BASE_URL}/recipes/${id}`, MethodType.DELETE).then(() => {
+      const index = recipes.findIndex((item) => item._id === id);
+      const copyRecipes = [...recipes];
+      copyRecipes.splice(index, 1);
+      setRecipes(copyRecipes);
+    });
+  };
+
   if (isEditMode) {
     return (
       <div>
@@ -63,7 +75,6 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
           <Form.Item
             label='Name'
             rules={[{ required: true, message: 'Please input recipe name!' }]}
-            name='name'
           >
             <Input value={chosenRecipe.name} defaultValue={chosenRecipe.name} name='name' onChange={handleChange} onBlur={handleBlur} />
           </Form.Item>
@@ -72,7 +83,7 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
             label='Description'
             rules={[{ required: false }]}
           >
-            <Input.TextArea value={chosenRecipe.description} name='description' onChange={handleChange} onBlur={handleBlur} />
+            <Input.TextArea value={chosenRecipe.description} defaultValue={chosenRecipe.name} name='description' onChange={handleChange} onBlur={handleBlur} />
           </Form.Item>
 
           {list}
@@ -89,14 +100,14 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
             </Input.Group>
           </Form.Item>
 
-          <Form.Item>
-            <Button type='primary' htmlType='submit'>
+          <div>
+            <Button htmlType='submit' icon={<EditOutlined />} style={{ marginRight: '8px' }}>
               Edit recipe
             </Button>
-            <Button type='primary' htmlType='submit' danger={true}>
+            <Button danger icon={<DeleteOutlined />} onClick={handleDeleteRecipe}>
               Remove recipe
             </Button>
-          </Form.Item>
+          </div>
         </Form>
       </div>
     );
@@ -105,7 +116,7 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
   return (
     <div>
       {chosenRecipe.image && (
-        <Image width='100%' height='120' style={{ objectFit: 'cover' }} src={chosenRecipe.image} />
+        <Image width='100%' height='120' src={chosenRecipe.image} />
       )}
       <Tag color='blue'>Vegetarian</Tag>
       <Title level={3}>{chosenRecipe.name}</Title>
