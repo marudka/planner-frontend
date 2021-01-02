@@ -55,8 +55,7 @@ const Edit: FunctionComponent<FormikProps<FormValues> & Props> = ({ values, hand
           return {
             ...item,
             name: values.name,
-            description: values.description,
-            ingredients: ingredients
+            description: values.description
           }
         }
         return item;
