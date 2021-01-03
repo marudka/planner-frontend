@@ -183,6 +183,7 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
         <Title level={2}>
           Add recipe
         </Title>
+        {isAlertVisible && <Alert message='Recipe edited successfully.' type='success' style={{ marginTop: '10px' }} />}
         <Form
           {...layout}
           name='basic'
@@ -246,7 +247,6 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
             </Button>
           </Form.Item>
         </Form>
-        {isAlertVisible && <Alert message='Recipe edited successfully.' type='success' style={{ marginTop: '10px' }} />}
       </Content>
     </Layout>
   );
