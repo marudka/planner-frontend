@@ -1,21 +1,14 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Form, Input, Button, Layout, Typography, Upload, Modal, Select } from 'antd';
+import {Form, Input, Button, Layout, Typography, Upload, Modal, Select, Alert} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { withFormik, FormikErrors, FormikProps } from 'formik';
+import { useFormik } from 'formik';
 
 import { BASE_URL } from './constants/config';
 import { useRecipesContext } from './useRecipesContext';
 
 const { Option } = Select;
 
-interface FormValues {
-  name: string;
-  description?: string;
-}
-
-interface Props {
-  submit: (values: FormValues) => Promise<FormikErrors<FormValues> | null>;
-}
+interface AddRecipeProps {}
 
 interface Ingredient {
   name: string | null;
@@ -44,7 +37,7 @@ const tailLayout = {
 const { Content } = Layout;
 const { Title } = Typography;
 
-export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ values, handleSubmit, handleChange, handleBlur }) => {
+export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
   const [ingredients, addIngredients] = useState<Ingredient[]>([]);
   const [ingredient, setIngredient] = useState<Ingredient>({
     name: null,
@@ -57,7 +50,52 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
     previewTitle: '',
     fileList: [],
   });
-  const { recipes, setRecipes } = useRecipesContext();
+  const [isAlertVisible, setAlertVisibility] = useState(false);
+  const { recipes, setRecipes, getRecipes } = useRecipesContext();
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      description: ''
+    },
+    validate: values => {
+      setAlertVisibility(false);
+      const errors = {};
+      if (!values.name) {
+        // @ts-ignore
+        errors.name = 'Required';
+      }
+      return errors;
+    },
+    onSubmit: (values, { resetForm, setSubmitting }) => {
+      setSubmitting(false);
+      resetForm();
+
+      const formData = new FormData();
+      if (images.fileList.length) {
+        // @ts-ignore
+        formData.append('file', images.fileList[0].originFileObj);
+      }
+      formData.append('name', values.name);
+      if (values.description) {
+        formData.append('description', values.description);
+      }
+      if (ingredients && ingredients.length) {
+        formData.append('ingredients', JSON.stringify(ingredients));
+      }
+
+      fetch(`${BASE_URL}/recipes`, {
+        method: 'POST',
+        body: formData
+      })
+        .then((response) => response.json())
+        .then(() => {
+          getRecipes();
+          setAlertVisibility(true);
+        })
+        .catch(error => console.log(error));
+    },
+    enableReinitialize: true,
+  });
 
   // @ts-ignore
   const handleIngredientNameChange = (e) => {
@@ -120,30 +158,9 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
   };
 
   const onFinish = () => {
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append('file', images.fileList[0].originFileObj);
-    formData.append('name', values.name);
-    if (values.description) {
-      formData.append('description', values.description);
-    }
-    if (ingredients && ingredients.length) {
-      formData.append('ingredients', JSON.stringify(ingredients));
-    }
 
-    fetch(`${BASE_URL}/recipes`, {
-      method: 'POST',
-      body: formData
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let updatedRecipes = [...recipes];
-        updatedRecipes.push(data);
-        setRecipes(updatedRecipes);
-      })
-      .catch(error => console.log(error));
 
-    handleSubmit();
+    formik.handleSubmit();
   };
 
   // @ts-ignore
@@ -178,14 +195,14 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
             rules={[{ required: true, message: 'Please input recipe name!' }]}
             name='name'
           >
-            <Input value={values.name} name='name' onChange={handleChange} onBlur={handleBlur} />
+            <Input value={formik.values.name} name='name' onChange={formik.handleChange} onBlur={formik.handleBlur} />
           </Form.Item>
 
           <Form.Item
             label='Description'
             rules={[{ required: false }]}
           >
-            <Input.TextArea value={values.description} name='description' onChange={handleChange} onBlur={handleBlur} />
+            <Input.TextArea value={formik.values.description} name='description' onChange={formik.handleChange} onBlur={formik.handleBlur} />
           </Form.Item>
 
           <Form.Item {...tailLayout}>
@@ -229,29 +246,8 @@ export const AddRecipe: FunctionComponent<FormikProps<FormValues> & Props> = ({ 
             </Button>
           </Form.Item>
         </Form>
+        {isAlertVisible && <Alert message='Recipe edited successfully.' type='success' style={{ marginTop: '10px' }} />}
       </Content>
     </Layout>
   );
 };
-
-export const AddRecipeForm = withFormik<Props, FormValues>({
-  mapPropsToValues: () => ({ name: '', description: '' }),
-
-  // Custom sync validation
-  validate: values => {
-    const errors = {};
-
-    if (!values.name) {
-      // @ts-ignore
-      errors.name = 'Required';
-    }
-
-    return errors;
-  },
-
-  handleSubmit: (values, { setSubmitting }) => {
-    setSubmitting(false);
-  },
-
-  displayName: 'BasicForm',
-})(AddRecipe);

@@ -5,7 +5,7 @@ import { Menu, Layout } from 'antd';
 import './App.css';
 
 import { Home } from './Home';
-import { AddRecipeConnector } from './AddRecipeConnector';
+import { AddRecipe } from './AddRecipe';
 import { ShoppingList } from './ShoppingList';
 import { RecipesContextProvider } from './Context';
 
@@ -29,7 +29,7 @@ function App() {
         </Layout>
         <Switch>
           <Route path={'/add-recipe'}>
-            <AddRecipeConnector />
+            <AddRecipe />
           </Route>
           <Route path={'/shopping-list'}>
             <ShoppingList />

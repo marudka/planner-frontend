@@ -32,7 +32,7 @@ export const DrawerContent: FunctionComponent<DrawerContentProps> = ({ id, isEdi
       <Tag color='blue'>Vegetarian</Tag>
       <Title level={3} style={{ marginTop: '10px' }}>{chosenRecipe.name}</Title>
       {chosenRecipe.description && <Descriptions.Item label='Description'>{chosenRecipe.description}</Descriptions.Item>}
-      <Title level={5}>Ingredients</Title>
+      {chosenRecipe.ingredients.length && <Title level={5}>Ingredients</Title>}
       <ul>
         {list}
       </ul>
