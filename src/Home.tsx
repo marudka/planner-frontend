@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import { Calendar, Layout, Spin, Input, Typography, Modal, Button, Checkbox, Drawer, Empty } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import moment, { Moment } from 'moment';
 import { fetchData } from './useFetch';
 
@@ -91,25 +92,27 @@ export const Home: FunctionComponent = () => {
 
   const handleButtonClick = () => {
     if (chosenRecipeId) {
+      // const chosenRecipe = recipes.find((item) => item._id === chosenRecipeId);
       const time = moment(date).format('L');
       const filteredIngredients = ingredients.filter((item) => item.isChecked);
-      const body = {
-        days: {
-          [time]: filteredIngredients
-        }
-      };
-      fetchData(`${BASE_URL}/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then((result) => {
-        setRecipeToDateModalVisibility(false);
-        const updatedRecipes = recipes.map((item) => {
-          if (chosenRecipeId === item._id) {
-            return  {
-              ...item,
-              ...body
+      let body = {};
+      const updatedRecipes = recipes.map((item) => {
+        if (chosenRecipeId === item._id) {
+          body = {
+            days: {
+              ...item.days,
+              [time]: filteredIngredients
             }
+          };
+          return  {
+            ...item,
+            ...body
           }
-          return item;
-        });
-
+        }
+        return item;
+      });
+      fetchData(`${BASE_URL}/recipes/${chosenRecipeId}`, MethodType.PATCH, body).then(() => {
+        setRecipeToDateModalVisibility(false);
         setRecipes(updatedRecipes);
       });
     }
@@ -125,13 +128,51 @@ export const Home: FunctionComponent = () => {
     });
   };
 
+  const handleDeleteFromDay = (day: any, id: any) => {
+    const clickedRecipe = recipes.find((item) => item._id === id);
+    if (clickedRecipe) {
+      const daysToChange = {...clickedRecipe.days};
+      delete daysToChange[day];
+      const body = {
+        days: daysToChange
+      };
+
+      fetchData(`${BASE_URL}/recipes/${id}`, MethodType.PATCH, body).then((result) => {
+        const updatedRecipes = recipes.map((item) => {
+          if (id === item._id) {
+            return  {
+              ...item,
+              days: daysToChange
+            }
+          }
+          return item;
+        });
+
+        setRecipes(updatedRecipes);
+      });
+    }
+  };
+
   const dataCellRender = (value: any) => {
     const listData = getListData(value);
+    const key = moment(value).format('L');
     return (
-      <ul className='recipes'>
+      <ul className='recipes' style={{ paddingLeft: '0' }}>
         {listData.map((item) => {
           return (
-            <li>{item.name}</li>
+            // @ts-ignore
+            <li>
+              <div>
+                <span className='truncate'>{item.name}</span>
+              </div>
+              <Button
+                icon={<DeleteOutlined />}
+                onClick={() => handleDeleteFromDay(key, item._id)}
+                size='small'
+                shape='circle'
+                style={{ marginLeft: '3px' }}
+              />
+            </li>
           )
         })}
       </ul>

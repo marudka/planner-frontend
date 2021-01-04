@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+ul.recipes li {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+
+ul.recipes li div, ul.recipes li button, ul.recipes li .truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ul.recipes li button {
+  opacity: 0;
+}
+
+ul.recipes li:hover button {
+  opacity: 1;
+}
+
+ul.recipes li button, ul.recipes li:hover button {
+  transition: opacity 0.2s ease-in;
+}
