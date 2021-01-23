@@ -37,10 +37,9 @@ export const ShoppingList: FunctionComponent = () => {
         {recipesStatus}
         {
           recipesList.map((item) => {
-            // @ts-ignore
-            return item.ingredients.map((item) => {
-              return <div>{item.name}, {item.count} {item.unit}</div>
-            })
+            return item.days[date].map((item, index) => {
+              return <div key={index}>{item.name}, {item.count} {item.unit}</div>
+            });
           })
         }
       </Content>

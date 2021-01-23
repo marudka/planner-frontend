@@ -200,13 +200,14 @@ export const Home: FunctionComponent = () => {
       >
         <div>
           {
-            ingredients.map((item) => {
+            ingredients.map((item, index) => {
               return (
                 <Checkbox
                   onChange={onChangeCheckbox}
                   checked={item.isChecked}
                   value={item.id}
                   style={{display: 'block', marginLeft: 0 }}
+                  key={index}
                 >
                   {item.name}, {item.count} {item.unit}
                 </Checkbox>
