@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import {Form, Input, Button, Layout, Typography, Upload, Modal, Select, Alert} from 'antd';
+import { Form, Input, Button, Layout, Typography, Upload, Modal, Select, Alert, Checkbox, Row, Col } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormik } from 'formik';
 
@@ -55,9 +55,14 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      description: ''
+      description: '',
+      isVege: false,
+      isGlutenFree: false,
+      portions: '',
+      calories: ''
     },
     validate: values => {
+      console.log('values', values)
       setAlertVisibility(false);
       const errors = {};
       if (!values.name) {
@@ -76,8 +81,16 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
         formData.append('file', images.fileList[0].originFileObj);
       }
       formData.append('name', values.name);
+      formData.append('isVege', String(values.isVege));
+      formData.append('isGlutenFree', String(values.isGlutenFree));
       if (values.description) {
         formData.append('description', values.description);
+      }
+      if (values.calories) {
+        formData.append('calories', values.calories);
+      }
+      if (values.portions) {
+        formData.append('portions', values.portions);
       }
       if (ingredients && ingredients.length) {
         formData.append('ingredients', JSON.stringify(ingredients));
@@ -158,8 +171,6 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
   };
 
   const onFinish = () => {
-
-
     formik.handleSubmit();
   };
 
@@ -240,6 +251,34 @@ export const AddRecipe: FunctionComponent<AddRecipeProps> = () => {
             >
               <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
+          </Form.Item>
+          <Form.Item
+            label='Portions'
+            rules={[{ required: false }]}
+            name='portions'
+          >
+            <Input value={formik.values.portions} name='portions' onChange={formik.handleChange} onBlur={formik.handleBlur} />
+          </Form.Item>
+          <Form.Item
+            label='Calories'
+            rules={[{ required: false }]}
+            name='calories'
+          >
+            <Input value={formik.values.calories} name='calories' onChange={formik.handleChange} onBlur={formik.handleBlur} />
+          </Form.Item>
+          <Form.Item
+            label='Is vegetarian'
+            rules={[{ required: false }]}
+            name='isVege'
+          >
+            <Checkbox onChange={formik.handleChange} name='isVege' />
+          </Form.Item>
+          <Form.Item
+            label='Is gluten free'
+            rules={[{ required: false }]}
+            name='isGlutenFree'
+          >
+            <Checkbox onChange={formik.handleChange} name='isGlutenFree' />
           </Form.Item>
           <Form.Item {...tailLayout}>
             <Button type='primary' htmlType='submit'>

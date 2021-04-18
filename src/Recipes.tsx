@@ -18,6 +18,10 @@ export interface RecipeType {
   ingredients: Ingredient[];
   days: DaysType
   description?: string;
+  isVege: boolean,
+  isGlutenFree: boolean,
+  portions: string,
+  calories: string
 }
 
 export interface RecipesProps {

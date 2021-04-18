@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Input, Form, Select, Button, Alert } from 'antd';
+import { Input, Form, Select, Button, Alert, Checkbox } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useRecipesContext } from './useRecipesContext';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { fetchData, MethodType } from './useFetch';
-import { Ingredient } from './Recipes';
+import { Ingredient, RecipeType } from './Recipes';
 import { BASE_URL } from './constants/config';
 import { useFormik } from 'formik';
 
@@ -16,21 +16,23 @@ const layout = {
 };
 
 interface EditFormProps {
-  name: string;
-  description?: string;
-  ingredients?: Ingredient[];
   id: string;
+  chosenRecipe: RecipeType;
 }
 
-export const EditForm: FunctionComponent<EditFormProps> = ({ name, description, ingredients, id }) => {
+export const EditForm: FunctionComponent<EditFormProps> = ({ chosenRecipe, id }) => {
   const { recipes, setRecipes } = useRecipesContext();
-  const [ingredientsList, setIngredients] = useState(ingredients);
+  const [ingredientsList, setIngredients] = useState(chosenRecipe.ingredients);
   const [isAlertVisible, setAlertVisibility] = useState(false);
   const formik = useFormik({
     initialValues: {
-      name: name,
-      description: description || '',
-      ingredients: ingredients || [],
+      name: chosenRecipe.name,
+      description: chosenRecipe.description || '',
+      ingredients: chosenRecipe.ingredients || [],
+      isVege: chosenRecipe.isVege,
+      isGlutenFree: chosenRecipe.isGlutenFree,
+      portions: chosenRecipe.portions,
+      calories: chosenRecipe.calories,
       id: id
     },
     validate: values => {
@@ -46,7 +48,11 @@ export const EditForm: FunctionComponent<EditFormProps> = ({ name, description, 
       const body = {
         name: values.name,
         description: values.description,
-        ingredients: ingredients
+        ingredients: chosenRecipe.ingredients,
+        isVege: values.isVege,
+        isGlutenFree: values.isGlutenFree,
+        portions: values.portions,
+        calories: values.calories
       };
 
       fetchData(`${BASE_URL}/recipes/${formik.values.id}`, MethodType.PATCH, body).then(() => {
@@ -95,6 +101,8 @@ export const EditForm: FunctionComponent<EditFormProps> = ({ name, description, 
     });
   };
 
+  console.log('formik', formik.values);
+
   return (
     <div>
       <Form
@@ -116,6 +124,32 @@ export const EditForm: FunctionComponent<EditFormProps> = ({ name, description, 
           rules={[{ required: false }]}
         >
           <Input.TextArea value={formik.values.description} name='description' onChange={formik.handleChange} onBlur={handleBlur} />
+        </Form.Item>
+
+        <Form.Item
+          label='Portions'
+          rules={[{ required: false }]}
+        >
+          <Input value={formik.values.portions} name='portions' onChange={formik.handleChange} onBlur={formik.handleBlur} />
+        </Form.Item>
+        <Form.Item
+          label='Calories'
+          rules={[{ required: false }]}
+        >
+          <Input value={formik.values.calories} name='calories' onChange={formik.handleChange} onBlur={formik.handleBlur} />
+        </Form.Item>
+        <Form.Item
+          label='Is vegetarian'
+          rules={[{ required: false }]}
+        >
+          <Checkbox onChange={formik.handleChange} name='isVege' value={formik.values.isVege} checked={formik.values.isVege} />
+        </Form.Item>
+        <Form.Item
+          label='Is gluten free'
+          rules={[{ required: false }]}
+          name='isGlutenFree'
+        >
+          <Checkbox onChange={formik.handleChange} name='isGlutenFree' value={formik.values.isGlutenFree} checked={formik.values.isGlutenFree} />
         </Form.Item>
 
         {list}
