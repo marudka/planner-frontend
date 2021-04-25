@@ -181,7 +181,7 @@ export const Home: FunctionComponent = () => {
 
   return (
     <Layout>
-      <Sider width={300} theme='light' style={{ padding: '0 20px'}}>
+      <Sider width={300} theme='light' style={{ padding: '0 20px', overflowY: 'scroll', height: '100vh'}}>
         <Title level={4} style={{ marginTop: '10px' }}>List of recipes</Title>
         <Search enterButton />
         {recipesStatus}
